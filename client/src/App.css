@@ -1,0 +1,42 @@
+:root {
+  /*colores primarios usados para elementos principales, botones, enlaces y acciones primarias.*/
+  --primary-50: #e6fff7; /* Muy claro - backgrounds sutiles */
+  --primary-100: #ccfff0; /* Claro - hover states */
+  --primary-200: #99ffe1; /* Medio claro */
+  --primary-300: #66ffd2; /* Medio */
+  --primary-400: #33ffc3; /* Medio oscuro */
+  --primary-500: #00cc99; /* Base - botones, enlaces (ajustado para mejor contraste) */
+  --primary-600: #00a37a; /* Oscuro - hover en botones (ajustado) */
+  --primary-700: #007a5c; /* Muy oscuro - active states (ajustado) */
+  --primary-800: #00523d; /* Ultra oscuro */
+  --primary-900: #00291f; /* Casi negro */
+
+  /*colores secundarios 
+  Basados en grises azulados (slate), usados para texto, bordes, backgrounds y elementos neutrales.
+  */
+  --secondary-200: #e2e8f0; /* Bordes claros invertidos */
+  --secondary-300: #cbd5e1; /* Texto muy claro */
+  --secondary-400: #94a3b8; /* Texto claro */
+  --secondary-500: #64748b; /* Texto medio */
+  --secondary-600: #475569; /* Bordes oscuros, backgrounds elevados */
+  --secondary-700: #334155; /* Cards, backgrounds secundarios */
+  --secondary-800: #1e293b; /* Backgrounds primarios */
+  --secondary-900: #0f172a; /* Background principal de la app */
+}
+.custom-file-button {
+  /* Estilos del botón */
+  background-color: var(--primary-700); /* Color de fondo, ¡cámbialo! */
+  color: white; /* Color del texto */
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer; /* Indica que es clickeable */
+  font-family: sans-serif;
+  text-align: center;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+/* Estilo al pasar el ratón */
+.custom-file-button:hover {
+  background-color: #0056b3;
+}
