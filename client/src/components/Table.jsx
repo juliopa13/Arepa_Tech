@@ -1,12 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Table.css";
 import Buttons from "./Buttons";
 function Table({ manejarArchivo, resultado }) {
-  const facturas = resultado
-    ? Array.isArray(resultado)
-      ? resultado
-      : [resultado]
-    : [];
+  const [nuevasFacturas, setNuevasFacturas] = useState([]);
+
+  // cargar facturas desde localStorage solo al iniciar
+  useEffect(() => {
+    const guardadas = JSON.parse(localStorage.getItem("resultado")) || [];
+    setNuevasFacturas(guardadas);
+  }, []);
+
+  // Solo agregar nueva factura si existe y no está ya en el array
+  useEffect(() => {
+    if (!resultado) return;
+
+    setNuevasFacturas((prev) => {
+      // Evitar duplicados (opcional)
+      const existe = prev.some(
+        (f) => f.datos?.InvoiceNumber === resultado.datos?.InvoiceNumber
+      );
+      if (existe) return prev;
+
+      const actualizado = [...prev, resultado];
+      localStorage.setItem("resultado", JSON.stringify(actualizado));
+      return actualizado;
+    });
+  }, [resultado]);
   return (
     <div>
       {/* this is a component where is the buttons with new, edit and export, import*/}
@@ -27,20 +46,22 @@ function Table({ manejarArchivo, resultado }) {
               </tr>
             </thead>
             <tbody>
-              {facturas.map((factura, index) => (
+              {nuevasFacturas.map((factura, index) => (
                 <tr key={index} style={{}}>
                   <td>noti</td>
                   <td>{factura.datos?.InvoiceNumber || "—"}</td>
                   <td>{factura.datos?.MBL || "—"}</td>
-                  <span
-                    className="state-factura"
-                    style={{
-                      backgroundColor:
-                        factura.estado === "Cumple" ? "green" : "red",
-                    }}
-                  >
-                    {factura.estado || "—"}
-                  </span>
+                  <td>
+                    <span
+                      className="state-factura"
+                      style={{
+                        backgroundColor:
+                          factura.estado === "Cumple" ? "green" : "red",
+                      }}
+                    >
+                      {factura.estado || "—"}
+                    </span>
+                  </td>
                   <td>{factura.datos?.HBL || "—"}</td>
                   <td>{factura.datos?.OriginCountryAddress || "—"}</td>
                   <td>{factura.datos?.DestinationAddress || "—"}</td>
