@@ -4,7 +4,7 @@ def validar_campos_obligatorios(dic, errores):
     """Valida que todos los campos de la lista OBLIGATORIOS existan y no estén vacíos."""
     for campo in OBLIGATORIOS:
         if campo not in dic or str(dic.get(campo, "")).strip() == "":
-            errores.append(f"Falta el campo obligatorio o está vacío: {campo}")
+            errores.append(f"{campo}")
 
 def validar_tipo_factura(dic, errores):
     """Valida que el InvoiceType exista y no sea 'Proforma'."""

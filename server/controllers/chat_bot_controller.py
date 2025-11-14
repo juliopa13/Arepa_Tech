@@ -37,7 +37,7 @@ def analizar_factura():
 
     # 3. Enviar errores a IA para complementarlos con fundamento legal
     prompt = f"""
-Eres un experto en valoración aduanera y validación documental, por favor crea un informe bonito.
+Eres un experto en valoración aduanera y validación documental,  Tu tarea es crear un **Informe Técnico de Análisis de Factura Comercial** que sea profesional, legible y estéticamente estructurado para generar un PDF. 
 
 Usa ÚNICAMENTE las siguientes fuentes normativas oficiales:
 
@@ -52,16 +52,23 @@ Errores detectados:
 Factura analizada (JSON):
 {dic_campos}
 
-Tu tarea:
-1. Explicar cada error con fundamento en la normativa DIAN y la CAN 1684.
-2. Indicar por qué ese error invalida o afecta la validación aduanera.
-3. Dar una **solución exacta** para corregirlo.
-4. Explicar riesgos o consecuencias de no corregir la factura.
-5. Responder en formato:
-   - **Error detectado**
-   - **Fundamento legal**
-   - **Explicación**
-   - **Cómo corregirlo**
+Instrucciones:
+1. Cada error debe presentarse como un **bloque independiente** con encabezado.
+2. Para cada error, incluye:
+   - **Error detectado:** descripción clara y concisa.
+   - **Fundamento legal:** citar norma exacta (DIAN, CAN 1684, Artículos, Secciones).
+   - **Explicación:** cómo afecta la validez de la factura y por qué es crítico.
+   - **Cómo corregirlo:** sugerencia práctica, paso a paso, que el usuario pueda implementar.
+   - **Riesgos o consecuencias:** qué pasa si no se corrige.
+   - **Consejo adicional:** recomendaciones prácticas para evitar errores similares en futuras facturas.
+3. Usa **subtítulos, viñetas y numeraciones** para mejorar la legibilidad.
+4. No repitas la misma frase para distintos errores.
+5. El texto debe ser **formal, coherente y fácil de leer** para un auditor o inspector aduanero.
+6. Incluye una breve **introducción** al inicio explicando el propósito del informe.
+7. Al final, agrega un **resumen o conclusión breve** sobre el estado general de la factura.
+
+Genera el resultado en **formato Markdown**, listo para procesar en PDF con secciones, encabezados y viñetas.  
+El informe debe verse profesional y **guiar al usuario paso a paso** sobre cómo solucionar cada problema identificado.
     """
 
     respuesta_ia = model.generate_content(prompt)
