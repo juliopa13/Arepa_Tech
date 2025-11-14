@@ -68,6 +68,8 @@ def validar_valor_factura(dic, tabla, errores):
 
 def validate_invoice(data):
 
+    if isinstance(data, list) and len(data) > 0:
+        data = data[0]
     campos = data.get("Fields", [])
     tabla = data.get("Table", [])
     errores = []

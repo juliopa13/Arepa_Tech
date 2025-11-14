@@ -1,61 +1,73 @@
-import os
-from flask import Flask, request, jsonify
-from flask_cors import CORS
 import google.generativeai as genai
-from dotenv import load_dotenv
-from flask import Blueprint
+import os
+from flask import Blueprint, request, jsonify
+from services.pdf_texto import cargar_pdf_como_texto
+from services.validation_service import validate_invoice
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # controllers/
+PDF_PATH = os.path.join(BASE_DIR, "..", "files", "Cartilla-Factura-comercial-CT-COA-0124-V2.pdf")
+
+cartilla_dian = cargar_pdf_como_texto(os.path.normpath(PDF_PATH))
 
 
-# --- Cargar variables de entorno (.env) ---
-load_dotenv()
-API_KEY = os.getenv("API_KEY")
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+model = genai.GenerativeModel("gemini-2.5-flash")
 
-# --- Configuración del modelo Gemini ---
-genai.configure(api_key=API_KEY)
+ia_bp = Blueprint("ia", __name__, url_prefix="/api/ia")
 
-# --- Ruta del Chat ---
-chat_ia = Blueprint('chat_ia', __name__)
-@chat_ia.route("/api/codereview", methods=["POST"]) # Cambiar el nombre de la ruta es buena práctica
-def generate_validation_code():
-    try:
-        data = request.get_json()
-        
-        # Nuevos nombres de variables más claros para el contexto de la DIAN
-        regla_a_codificar = data.get("regla_a_codificar", "") 
-        codigo_de_ayuda = data.get("codigo_de_ayuda", "") # Tus funciones ya creadas
-        normativa_dian = data.get("normativa_dian", "") # Texto extraído del PDF
 
-        # Construir prompt completo
-        prompt = f"""
-Eres un ingeniero de software experto en Flask y Python, especializado en normatividad aduanera colombiana (DIAN). Tu tarea es tomar una regla de la factura de importación y crear una nueva función de validación modular en Python.
+@ia_bp.post("/analizar-factura")
+def analizar_factura():
 
-# RECURSOS Y REGLAS DE AUTORIDAD
-{normativa_dian}
+    data = request.json
+    if not data:
+        return jsonify({"error": "Debe enviar un JSON"}), 400
 
-# CÓDIGO DE AYUDA (Estructura que ya está en uso)
-Utiliza este código como ejemplo de la firma de las funciones y la estructura del error:
-{codigo_de_ayuda}
+    # 1. VALIDACIONES INTERNAS
+    resultado = validate_invoice(data)
+    errores_detectados = resultado["errores"]
+    dic_campos = resultado["datos"]
 
-# TAREA
-Genera el código de una nueva función modular de Python que implemente estrictamente la siguiente regla:
-"{regla_a_codificar}"
+    # 2. SI NO HAY ERRORES → No es necesario usar IA
+    if not errores_detectados:
+        return jsonify({
+            "estado": "Cumple",
+            "mensaje": "La factura cumple con los requisitos técnicos y normativos."
+        })
 
-La nueva función debe llamarse 'validar_[nombre_del_campo]' y debe aceptar (dic, errores) o (tabla, errores) como argumentos, y debe añadir un error a la lista 'errores' si la regla no se cumple.
-Asegúrate de manejar posibles errores de tipo (ej., si esperas un número y recibes texto).
+    # 3. Enviar errores a IA para complementarlos con fundamento legal
+    prompt = f"""
+Eres un experto en valoración aduanera y validación documental.
 
-SOLO devuelve el bloque de código de la función Python. No añadas explicaciones ni texto introductorio.
-"""
+Usa ÚNICAMENTE las siguientes fuentes normativas oficiales:
 
-        # Crear el modelo de Gemini
-        model = genai.GenerativeModel("gemini-2.0-flash")
+📘 **Cartilla DIAN – Factura Comercial y Determinación del Valor en Aduana**
+{cartilla_dian}
 
-        # Generar la respuesta
-        response = model.generate_content(prompt)
-        text = response.text if hasattr(response, "text") else "No se recibió código."
+Ahora explica los siguientes errores técnicos encontrados en la factura:
 
-        return jsonify({"validation_function": text})
+Errores detectados:
+{errores_detectados}
 
-    except Exception as e:
-        # La segunda parte del try/except es redundante y se puede eliminar
-        print("Error al contactar la API de Gemini:", e)
-        return jsonify({"error": "Lo siento, no pude procesar tu solicitud."}), 500
+Factura analizada (JSON):
+{dic_campos}
+
+Tu tarea:
+1. Explicar cada error con fundamento en la normativa DIAN y la CAN 1684.
+2. Indicar por qué ese error invalida o afecta la validación aduanera.
+3. Dar una **solución exacta** para corregirlo.
+4. Explicar riesgos o consecuencias de no corregir la factura.
+5. Responder en formato:
+   - **Error detectado**
+   - **Fundamento legal**
+   - **Explicación**
+   - **Cómo corregirlo**
+    """
+
+    respuesta_ia = model.generate_content(prompt)
+
+    return jsonify({
+        "estado": "No cumple",
+        "errores_detectados": errores_detectados,
+        "explicacion_normativa": respuesta_ia.text
+    })

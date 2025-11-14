@@ -3,11 +3,16 @@ import "./Table.css";
 import Buttons from "./Buttons";
 import { AiFillBell, AiOutlineBell } from "react-icons/ai";
 import ModalAlert from "./ModalAlert";
+import { useAnalizarFactura } from "../hooks/useAnalizarFactura";
+import { generarPDFAnalisis } from "../functions/descargarAnalisis";
 
 function Table({ manejarArchivo, resultado }) {
   const [nuevasFacturas, setNuevasFacturas] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFactura, setSelectedFactura] = useState(null);
+
+  const { analisis, loading, analizarFactura } =
+    useAnalizarFactura(nuevasFacturas);
   // cargar facturas desde localStorage solo al iniciar
   useEffect(() => {
     const guardadas = JSON.parse(localStorage.getItem("resultado")) || [];
@@ -34,7 +39,9 @@ function Table({ manejarArchivo, resultado }) {
   const openModal = (factura) => {
     setSelectedFactura(factura);
     setIsOpen(true);
+    analizarFactura();
   };
+
   return (
     <div>
       {/* this is a component where is the buttons with new, edit and export, import*/}
@@ -97,30 +104,13 @@ function Table({ manejarArchivo, resultado }) {
           onClose={() => setIsOpen(false)}
           title={`Factura: ${selectedFactura?.datos?.InvoiceNumber || ""}`}
         >
-          {selectedFactura && (
-            <div>
-              <p>
-                <strong>MBL:</strong> {selectedFactura.datos?.MBL}
-              </p>
-              <p>
-                <strong>HBL:</strong> {selectedFactura.datos?.HBL}
-              </p>
-              <p>
-                <strong>Origen:</strong>{" "}
-                {selectedFactura.datos?.OriginCountryAddress}
-              </p>
-              <p>
-                <strong>Destino:</strong>{" "}
-                {selectedFactura.datos?.DestinationAddress}
-              </p>
-              <p>
-                <strong>ETA:</strong> {selectedFactura.datos?.ETA}
-              </p>
-              <p>
-                <strong>Estado:</strong> {selectedFactura.estado}
-              </p>
-            </div>
-          )}
+          {loading && <p>Cargando explicación...</p>}
+          <button
+            onClick={() => generarPDFAnalisis(analisis)}
+            disabled={loading}
+          >
+            {!loading ? "Generando PDF..." : "Descargar análisis (.pdf)"}
+          </button>
         </ModalAlert>
       </div>
     </div>
