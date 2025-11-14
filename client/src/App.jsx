@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import "./App.css";
+import Table from "./components/Table";
 
 function App() {
   const [resultado, setResultado] = useState(null);
@@ -26,6 +27,7 @@ function App() {
   };
   return (
     <div style={{ padding: "20px" }}>
+      <Table manejarArchivo={manejarArchivo} />
       <h1>Validador DIAN</h1>
       <div className="file-upload-container">
         <label htmlFor="file-upload" className="custom-file-button">

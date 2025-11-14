@@ -1,0 +1,33 @@
+.container-table {
+  display: inline-grid;
+  justify-content: space-between;
+  gap: 10px;
+  background-color: var(--secondary-800);
+  width: 205vh;
+  height: auto;
+}
+.table-container {
+  background: var(--bg-card);
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: var(--secondary-700);
+  color: var(--secondary-200);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table th {
+  padding: 0.75rem 1rem;
+  text-align: center;
+  font-weight: 500;
+}
