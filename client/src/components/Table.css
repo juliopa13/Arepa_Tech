@@ -31,3 +31,26 @@
   text-align: center;
   font-weight: 500;
 }
+.table tbody tr {
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.table tbody tr:hover {
+  background: var(--bg-elevated);
+}
+
+.table td {
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+.state-factura {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  align-items: center;
+  min-width: 60px;
+  margin-top: 6px;
+}

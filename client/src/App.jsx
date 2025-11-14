@@ -5,7 +5,6 @@ import Table from "./components/Table";
 
 function App() {
   const [resultado, setResultado] = useState(null);
-
   const manejarArchivo = async (e) => {
     const archivo = e.target.files[0];
 
@@ -27,21 +26,7 @@ function App() {
   };
   return (
     <div style={{ padding: "20px" }}>
-      <Table manejarArchivo={manejarArchivo} />
-      <h1>Validador DIAN</h1>
-      <div className="file-upload-container">
-        <label htmlFor="file-upload" className="custom-file-button">
-          Elegir Archivo JSON
-        </label>
-
-        <input
-          id="file-upload"
-          type="file"
-          accept="application/json"
-          onChange={manejarArchivo}
-          style={{ display: "none" }} /* Oculta el input original */
-        />
-      </div>
+      <Table manejarArchivo={manejarArchivo} resultado={resultado} />
       {resultado && (
         <div style={{ marginTop: "20px" }}>
           <h2>Estado: {resultado.estado}</h2>

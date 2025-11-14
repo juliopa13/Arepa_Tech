@@ -1,7 +1,12 @@
 import React from "react";
 import "./Table.css";
 import Buttons from "./Buttons";
-function Table({ manejarArchivo }) {
+function Table({ manejarArchivo, resultado }) {
+  const facturas = resultado
+    ? Array.isArray(resultado)
+      ? resultado
+      : [resultado]
+    : [];
   return (
     <div>
       {/* this is a component where is the buttons with new, edit and export, import*/}
@@ -21,6 +26,28 @@ function Table({ manejarArchivo }) {
                 <th>ETA Estimated Time of Arrival</th>
               </tr>
             </thead>
+            <tbody>
+              {facturas.map((factura, index) => (
+                <tr key={index} style={{}}>
+                  <td>noti</td>
+                  <td>{factura.datos?.InvoiceNumber || "—"}</td>
+                  <td>{factura.datos?.MBL || "—"}</td>
+                  <span
+                    className="state-factura"
+                    style={{
+                      backgroundColor:
+                        factura.estado === "Cumple" ? "green" : "red",
+                    }}
+                  >
+                    {factura.estado || "—"}
+                  </span>
+                  <td>{factura.datos?.HBL || "—"}</td>
+                  <td>{factura.datos?.OriginCountryAddress || "—"}</td>
+                  <td>{factura.datos?.DestinationAddress || "—"}</td>
+                  <td>{factura.datos?.ETA || "—"}</td>
+                </tr>
+              ))}
+            </tbody>
           </table>
         </div>
       </div>
