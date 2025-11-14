@@ -105,12 +105,14 @@ function Table({ manejarArchivo, resultado }) {
           title={`Factura: ${selectedFactura?.datos?.InvoiceNumber || ""}`}
         >
           {loading && <p>Cargando explicación...</p>}
-          <button
-            onClick={() => generarPDFAnalisis(analisis)}
-            disabled={loading}
-          >
-            {!loading ? "Generando PDF..." : "Descargar análisis (.pdf)"}
-          </button>
+          <div>
+            <button
+              onClick={() => generarPDFAnalisis(analisis)}
+              disabled={loading}
+            >
+              {loading ? "Generando PDF..." : "Descargar análisis (.pdf)"}
+            </button>
+          </div>
         </ModalAlert>
       </div>
     </div>

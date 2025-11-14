@@ -37,7 +37,7 @@ def analizar_factura():
 
     # 3. Enviar errores a IA para complementarlos con fundamento legal
     prompt = f"""
-Eres un experto en valoración aduanera y validación documental.
+Eres un experto en valoración aduanera y validación documental, por favor crea un informe bonito.
 
 Usa ÚNICAMENTE las siguientes fuentes normativas oficiales:
 
