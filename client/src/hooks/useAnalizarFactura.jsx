@@ -1,13 +1,16 @@
 import { useState } from "react";
 
-export const useAnalizarFactura = (factura) => {
+export const useAnalizarFactura = () => {
   const [analisis, setAnalisis] = useState(null);
   const [loading, setLoading] = useState(false);
 
   // Si no hay factura aún, no hacemos nada
-  if (!factura) return;
 
-  const analizarFactura = async () => {
+  const analizarFactura = async (factura) => {
+    if (!factura) {
+      console.warn("No se envió factura al analizarFactura");
+      return;
+    }
     setLoading(true);
     console.log("Factura enviada a IA:", factura);
     try {

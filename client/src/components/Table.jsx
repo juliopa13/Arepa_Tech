@@ -4,15 +4,14 @@ import Buttons from "./Buttons";
 import { AiFillBell, AiOutlineBell } from "react-icons/ai";
 import ModalAlert from "./ModalAlert";
 import { useAnalizarFactura } from "../hooks/useAnalizarFactura";
-import { generarPDFAnalisis } from "../functions/descargarAnalisis";
+import { generarPDF } from "../functions/descargarAnalisis";
 
 function Table({ manejarArchivo, resultado }) {
   const [nuevasFacturas, setNuevasFacturas] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFactura, setSelectedFactura] = useState(null);
 
-  const { analisis, loading, analizarFactura } =
-    useAnalizarFactura(nuevasFacturas);
+  const { analisis, loading, analizarFactura } = useAnalizarFactura();
   // cargar facturas desde localStorage solo al iniciar
   useEffect(() => {
     const guardadas = JSON.parse(localStorage.getItem("resultado")) || [];
@@ -39,7 +38,7 @@ function Table({ manejarArchivo, resultado }) {
   const openModal = (factura) => {
     setSelectedFactura(factura);
     setIsOpen(true);
-    analizarFactura();
+    analizarFactura(factura);
   };
 
   return (
@@ -106,10 +105,7 @@ function Table({ manejarArchivo, resultado }) {
         >
           {loading && <p>Cargando explicación...</p>}
           <div>
-            <button
-              onClick={() => generarPDFAnalisis(analisis)}
-              disabled={loading}
-            >
+            <button onClick={() => generarPDF(analisis)} disabled={loading}>
               {loading ? "Generando PDF..." : "Descargar análisis (.pdf)"}
             </button>
           </div>
