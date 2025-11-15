@@ -1,10 +1,80 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>client</title>
+    <title>Kila Dashboard Responsive</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <style>
+      /* Configuración personalizada de Tailwind para un tema oscuro */
+      :root {
+        --primary-color: 14, 165, 233; /* blue-500 */
+      }
+
+      /* Definiciones de color basadas en una paleta oscura */
+      .bg-secondary-900 {
+        background-color: #111827;
+      } /* gray-900 */
+      .bg-secondary-700 {
+        background-color: #1f2937;
+      } /* gray-800 */
+      .bg-secondary-600 {
+        background-color: #374151;
+      } /* gray-600 */
+      .text-secondary-100 {
+        color: #f3f4f6;
+      } /* gray-100 */
+      .text-secondary-300 {
+        color: #d1d5db;
+      } /* gray-300 */
+      .text-secondary-400 {
+        color: #9ca3af;
+      } /* gray-400 */
+      .text-primary-500 {
+        color: rgb(var(--primary-color));
+      }
+      .bg-primary-500\/10 {
+        background-color: rgba(var(--primary-color), 0.1);
+      }
+
+      /* Estilos base para asegurar el min-height y min-width */
+      html {
+        min-height: 100%;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        min-width: 320px;
+        min-height: 100vh;
+        display: flex; /* Asegura que el body contenga el flex principal */
+      }
+
+      /* Estilo para tablas modernas y responsivas */
+      .custom-table th,
+      .custom-table td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #374151; /* secondary-600 */
+      }
+      .custom-table th {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        font-weight: 600;
+        color: #9ca3af; /* secondary-400 */
+        background-color: #1f2937; /* secondary-700, slightly darker header */
+      }
+      .custom-table tr:hover {
+        background-color: #1f2937; /* secondary-700 on hover */
+      }
+    </style>
   </head>
   <body>
     <div id="root"></div>
